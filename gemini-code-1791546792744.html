@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Party Management Pro</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style type="text/tailwindcss">
+        @custom-variant dark (&:where(.dark, .dark *));
+    </style>
+    <!-- FontAwesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Google API Client Library -->
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script src="https://accounts.google.com/gsi/client"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        @media print {
+            body { background: white !important; color: black !important; }
+            .no-print { display: none !important; }
+        }
+        /* Custom Smooth Transitions */
+        .modal-overlay { transition: opacity 0.3s ease, backdrop-filter 0.3s ease; }
+        .modal-content { transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease; }
+    </style>
+</head>
+<body class="bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 antialiased pb-20 sm:pb-8 transition-colors duration-200">
+
+    <!-- Auth & Biometric Protection Modal -->
+    <div id="authModal" class="modal-overlay fixed inset-0 bg-slate-900/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="modal-content bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-2xl w-full max-w-sm text-center space-y-4 border border-slate-200 dark:border-slate-800 transform scale-100">
+            <div class="w-14 h-14 bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 rounded-2xl mx-auto flex items-center justify-center text-2xl">
+                <i class="fa-solid fa-lock"></i>
+            </div>
+            <div>
+                <h2 class="text-lg font-bold text-slate-800 dark:text-white">Security Verification</h2>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Enter password or use fingerprint</p>
+            </div>
+            <form onsubmit="verifyPassword(event)" class="space-y-3">
+                <input type="password" id="loginPassword" placeholder="Enter password" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm text-center tracking-widest focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-white transition">
+                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 active:scale-98 text-white font-semibold py-3 rounded-xl text-sm transition shadow-sm cursor-pointer">Login</button>
+            </form>
+            
+            <button type="button" onclick="loginWithBiometric()" class="w-full bg-emerald-50 dark:bg-emerald-950/50 hover:bg-emerald-100 active:scale-98 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 font-semibold py-2.5 rounded-xl text-xs transition cursor-pointer flex items-center justify-center gap-2">
+                <i class="fa-solid fa-fingerprint text-base"></i> Login with Biometric
+            </button>
+
+            <div class="text-right">
+                <button type="button" onclick="openForgotModal()" class="text-xs text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer">Forgot Password?</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div id="forgotModal" class="modal-overlay fixed inset-0 bg-black/60 backdrop-blur-xs z-50 hidden opacity-0 flex items-center justify-center p-4 transition-opacity duration-300">
+        <div class="modal-content bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-2xl w-full max-w-sm space-y-4 border border-slate-200 dark:border-slate-800 transform scale-95">
+            <div class="flex justify-between items-center">
+                <h2 class="text-base font-bold text-slate-800 dark:text-white">Password Recovery</h2>
+                <button onclick="closeForgotModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Secret Answer: What is your favorite teacher's name? (Default: admin)</p>
+            <form onsubmit="resetPassword(event)" class="space-y-3">
+                <input type="text" id="securityAnswer" required placeholder="Enter secret answer" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-white transition">
+                <input type="password" id="newPasswordInput" required placeholder="Enter new password" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-white transition">
+                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 active:scale-98 text-white font-semibold py-2.5 rounded-xl text-sm transition cursor-pointer">Update Password</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal-overlay fixed inset-0 bg-black/60 backdrop-blur-xs z-50 hidden opacity-0 flex items-center justify-center p-4 transition-opacity duration-300">
+        <div class="modal-content bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-2xl w-full max-w-sm space-y-4 border border-slate-200 dark:border-slate-800 transform scale-95">
+            <div class="flex justify-between items-center">
+                <h2 class="text-base font-bold text-slate-800 dark:text-white">Settings & Security</h2>
+                <button onclick="closeSettingsModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form onsubmit="changePassword(event)" class="space-y-3">
+                <input type="password" id="oldPass" required placeholder="Old Password" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-white transition">
+                <input type="password" id="newPass" required placeholder="New Password" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-white transition">
+                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 active:scale-98 text-white font-semibold py-2.5 rounded-xl text-sm transition cursor-pointer">Change Password</button>
+            </form>
+            <div class="pt-2 border-t border-slate-100 dark:border-slate-800">
+                <button type="button" onclick="setupBiometric()" class="w-full bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 active:scale-98 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 font-semibold py-2.5 rounded-xl text-xs transition cursor-pointer flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-fingerprint text-base"></i> Enable Biometric Login
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="bg-indigo-600 dark:bg-indigo-950 text-white shadow-md sticky top-0 z-40 no-print transition-colors duration-200">
+        <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2.5">
+                <div class="bg-white/10 p-2 rounded-xl">
+                    <i class="fa-solid fa-users-rectangle text-xl text-amber-300"></i>
+                </div>
+                <div>
+                    <h1 class="text-base sm:text-lg font-bold leading-tight">Party Management Pro</h1>
+                    <p class="text-[10px] sm:text-xs text-indigo-200">Smart Directory & Sync</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-1.5">
+                <button onclick="toggleDarkMode()" title="Toggle Dark Mode" class="bg-white/10 hover:bg-white/20 p-2 rounded-xl text-xs font-medium transition active:scale-95 cursor-pointer">
+                    <i id="darkModeIcon" class="fa-solid fa-moon"></i>
+                </button>
+                <button onclick="handleGoogleDriveAuth()" id="driveAuthBtn" title="Google Drive Sync" class="bg-white/10 hover:bg-white/20 px-2.5 py-2 rounded-xl text-xs font-medium transition active:scale-95 cursor-pointer flex items-center gap-1">
+                    <i class="fa-brands fa-google-drive text-amber-300"></i> <span id="driveStatusText" class="hidden sm:inline">Drive</span>
+                </button>
+                <button onclick="openSettingsModal()" title="Settings" class="bg-white/10 hover:bg-white/20 p-2 rounded-xl text-xs font-medium transition active:scale-95 cursor-pointer">
+                    <i class="fa-solid fa-gear"></i>
+                </button>
+                <button onclick="printReport()" title="Print / PDF" class="bg-white/10 hover:bg-white/20 p-2 rounded-xl text-xs font-medium transition active:scale-95 cursor-pointer">
+                    <i class="fa-solid fa-print"></i>
+                </button>
+                <button onclick="exportData()" title="Export JSON" class="bg-white/10 hover:bg-white/20 p-2 rounded-xl text-xs font-medium transition active:scale-95 cursor-pointer">
+                    <i class="fa-solid fa-download"></i>
+                </button>
+                <label title="Import JSON" class="bg-white/10 hover:bg-white/20 p-2 rounded-xl text-xs font-medium transition active:scale-95 cursor-pointer inline-block">
+                    <i class="fa-solid fa-upload"></i>
+                    <input type="file" id="importFile" class="hidden" accept=".json" onchange="importData(event)">
+                </label>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-3 sm:px-4 py-4 space-y-4">
+        
+        <!-- Dashboard Overview -->
+        <div class="grid grid-cols-2 gap-3 no-print">
+            <div class="bg-white dark:bg-slate-900 p-3.5 rounded-2xl shadow-xs border border-slate-200/80 dark:border-slate-800 flex items-center justify-between transition-colors">
+                <div>
+                    <p class="text-[11px] font-semibold text-slate-400 uppercase">Total Parties</p>
+                    <h3 id="totalPartiesCount" class="text-xl font-bold text-slate-700 dark:text-slate-200">0</h3>
+                </div>
+                <div class="w-10 h-10 bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 rounded-xl flex items-center justify-center">
+                    <i class="fa-solid fa-user-group text-sm"></i>
+                </div>
+            </div>
+            <div onclick="openGalleryModal()" class="bg-white dark:bg-slate-900 p-3.5 rounded-2xl shadow-xs border border-slate-200/80 dark:border-slate-800 flex items-center justify-between cursor-pointer hover:border-indigo-300 transition">
+                <div>
+                    <p class="text-[11px] font-semibold text-slate-400 uppercase">Gallery Images</p>
+                    <h3 id="totalImagesCount" class="text-xl font-bold text-slate-700 dark:text-slate-200">0</h3>
+                </div>
+                <div class="w-10 h-10 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 rounded-xl flex items-center justify-center">
+                    <i class="fa-solid fa-images text-sm"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Category Filter Tags -->
+        <div class="flex items-center gap-1.5 overflow-x-auto pb-1 no-print" id="categoryFilterContainer">
+            <button onclick="filterCategory('All')" id="cat_All" class="category-btn bg-indigo-600 text-white px-3 py-1.5 rounded-xl text-xs font-semibold shrink-0 cursor-pointer shadow-xs transition">All</button>
+            <button onclick="filterCategory('Dealer')" id="cat_Dealer" class="category-btn bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800 px-3 py-1.5 rounded-xl text-xs font-semibold shrink-0 cursor-pointer transition">Dealer</button>
+            <button onclick="filterCategory('Site Delivery')" id="cat_Site Delivery" class="category-btn bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800 px-3 py-1.5 rounded-xl text-xs font-semibold shrink-0 cursor-pointer transition">Site Delivery</button>
+        </div>
+
+        <!-- Add New Party Button -->
+        <button onclick="openFormModal()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-2xl shadow-sm transition active:scale-98 cursor-pointer flex items-center justify-center gap-2 text-sm no-print">
+            <i class="fa-solid fa-user-plus text-amber-300 text-base"></i> Add New Party
+        </button>
+
+        <!-- Form Modal -->
+        <div id="formModal" class="modal-overlay fixed inset-0 bg-black/60 backdrop-blur-xs z-50 hidden opacity-0 flex items-center justify-center p-3 sm:p-4 overflow-y-auto transition-opacity duration-300">
+            <div class="modal-content bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 w-full max-w-lg overflow-hidden my-auto transform scale-95">
+                <div class="bg-slate-50 dark:bg-slate-800/50 px-4 py-3.5 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
+                    <h2 id="formTitle" class="text-indigo-600 dark:text-indigo-400 font-bold text-sm sm:text-base flex items-center gap-2">
+                        <i class="fa-solid fa-user-plus"></i> Add New Party
+                    </h2>
+                    <button type="button" onclick="closeFormModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 w-8 h-8 rounded-full flex items-center justify-center transition cursor-pointer">
+                        <i class="fa-solid fa-xmark text-base"></i>
+                    </button>
+                </div>
+                
+                <form id="partyForm" onsubmit="saveParty(event)" class="p-4 space-y-3.5 max-h-[80vh] overflow-y-auto">
+                    <input type="hidden" id="partyIndex">
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Name <span class="text-rose-500">*</span></label>
+                            <input type="text" id="name" required placeholder="Enter party name" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-white transition">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Category</label>
+                            <select id="category" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-white transition cursor-pointer">
+                                <option value="Dealer">Dealer</option>
+                                <option value="Site Delivery">Site Delivery</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Phone Number 1</label>
+                            <input type="tel" id="phone" placeholder="017xxxxxxxx" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-white transition">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Phone Number 2</label>
+                            <input type="tel" id="phone2" placeholder="018xxxxxxxx" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-white transition">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Party Code</label>
+                            <input type="text" id="code" placeholder="Code number" class="w-full bg-slate-50 dark:bg
