@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -13,38 +13,36 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <!-- Google Fonts Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Google API Client Library -->
-    <script src="https://apis.google.com/js/api.js"></script>
-    <script src="https://accounts.google.com/gsi/client"></script>
     <style>
         body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
         ::-webkit-scrollbar { width: 4px; height: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .dark ::-webkit-scrollbar-thumb { background: #334155; }
         @media print {
             body { background: white !important; color: black !important; }
             .no-print { display: none !important; }
         }
     </style>
 </head>
-<body class="bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 antialiased pb-20 sm:pb-8 transition-colors duration-200">
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased pb-20 sm:pb-8 transition-colors duration-200">
 
     <!-- Auth & Biometric Protection Modal -->
-    <div id="authModal" class="fixed inset-0 bg-slate-900/90 backdrop-blur-md z-50 flex items-center justify-center p-4 transition-opacity duration-300">
-        <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-2xl w-full max-w-sm text-center space-y-4 border border-slate-200 dark:border-slate-800 transform transition-all duration-300">
+    <div id="authModal" class="fixed inset-0 bg-slate-900/80 dark:bg-slate-900/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-2xl w-full max-w-sm text-center space-y-4 border border-slate-200 dark:border-slate-800">
             <div class="w-14 h-14 bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 rounded-2xl mx-auto flex items-center justify-center text-2xl">
                 <i class="fa-solid fa-lock"></i>
             </div>
             <div>
-                <h2 class="text-lg font-bold text-slate-800 dark:text-white">Security Verification</h2>
+                <h2 class="text-lg font-bold text-slate-900 dark:text-white">Security Verification</h2>
                 <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Enter password or use fingerprint</p>
             </div>
             <form onsubmit="verifyPassword(event)" class="space-y-3">
-                <input type="password" id="loginPassword" placeholder="Enter password" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm text-center tracking-widest focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-white">
+                <input type="password" id="loginPassword" placeholder="Enter password" class="w-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm text-center tracking-widest focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-white">
                 <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-xl text-sm transition shadow-sm cursor-pointer">Login</button>
             </form>
             
-            <button type="button" onclick="loginWithBiometric()" class="w-full bg-emerald-50 dark:bg-emerald-950/50 hover:bg-emerald-100 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 font-semibold py-2.5 rounded-xl text-xs transition cursor-pointer flex items-center justify-center gap-2">
+            <button type="button" onclick="loginWithBiometric()" class="w-full bg-emerald-50 dark:bg-emerald-950/50 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 font-semibold py-2.5 rounded-xl text-xs transition cursor-pointer flex items-center justify-center gap-2">
                 <i class="fa-solid fa-fingerprint text-base"></i> Login with Biometric
             </button>
 
@@ -55,34 +53,51 @@
     </div>
 
     <!-- Forgot Password Modal -->
-    <div id="forgotModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 hidden opacity-0 transition-opacity duration-300 flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-2xl w-full max-w-sm space-y-4 border border-slate-200 dark:border-slate-800 transform scale-95 transition-transform duration-300">
+    <div id="forgotModal" class="fixed inset-0 bg-black/50 dark:bg-black/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-2xl w-full max-w-sm space-y-4 border border-slate-200 dark:border-slate-800">
             <div class="flex justify-between items-center">
-                <h2 class="text-base font-bold text-slate-800 dark:text-white">Password Recovery</h2>
-                <button onclick="closeForgotModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+                <h2 class="text-base font-bold text-slate-900 dark:text-white">Password Recovery</h2>
+                <button onclick="closeForgotModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <p class="text-xs text-slate-500 dark:text-slate-400">Secret Answer: What is your favorite teacher's name? (Default: admin)</p>
             <form onsubmit="resetPassword(event)" class="space-y-3">
-                <input type="text" id="securityAnswer" required placeholder="Enter secret answer" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-white">
-                <input type="password" id="newPasswordInput" required placeholder="Enter new password" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-white">
-                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2.5 rounded-xl text-sm cursor-pointer transition">Update Password</button>
+                <input type="text" id="securityAnswer" required placeholder="Enter secret answer" class="w-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-white">
+                <input type="password" id="newPasswordInput" required placeholder="Enter new password" class="w-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-white">
+                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2.5 rounded-xl text-sm cursor-pointer">Update Password</button>
             </form>
         </div>
     </div>
 
     <!-- Settings Modal -->
-    <div id="settingsModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 hidden opacity-0 transition-opacity duration-300 flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-2xl w-full max-w-sm space-y-4 border border-slate-200 dark:border-slate-800 transform scale-95 transition-transform duration-300">
+    <div id="settingsModal" class="fixed inset-0 bg-black/50 dark:bg-black/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-2xl w-full max-w-sm space-y-4 border border-slate-200 dark:border-slate-800">
             <div class="flex justify-between items-center">
-                <h2 class="text-base font-bold text-slate-800 dark:text-white">Settings & Security</h2>
-                <button onclick="closeSettingsModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+                <h2 class="text-base font-bold text-slate-900 dark:text-white">Settings & Security</h2>
+                <button onclick="closeSettingsModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <form onsubmit="changePassword(event)" class="space-y-3">
-                <input type="password" id="oldPass" required placeholder="Old Password" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-white">
-                <input type="password" id="newPass" required placeholder="New Password" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-white">
-                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2.5 rounded-xl text-sm cursor-pointer transition">Change Password</button>
+            
+            <!-- Dark Mode Toggle Button -->
+            <div class="flex items-center justify-between bg-slate-100 dark:bg-slate-800/60 p-3 rounded-2xl border border-slate-200 dark:border-slate-700/50">
+                <span class="text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2"><i class="fa-solid fa-moon text-indigo-600 dark:text-indigo-400"></i> Dark Mode</span>
+                <button type="button" onclick="toggleDarkMode()" id="darkModeToggleBtn" class="w-12 h-6 flex items-center bg-slate-300 dark:bg-indigo-600 rounded-full p-1 transition duration-300 cursor-pointer">
+                    <div id="darkModeCircle" class="bg-white w-4 h-4 rounded-full shadow-md transform translate-x-0 dark:translate-x-6 transition duration-300"></div>
+                </button>
+            </div>
+
+            <!-- Google Drive Sync Button Inside Settings -->
+            <div>
+                <button type="button" onclick="handleGoogleDriveAuth()" id="driveAuthBtn" class="w-full bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-800/60 font-semibold py-2.5 rounded-xl text-xs transition cursor-pointer flex items-center justify-center gap-2">
+                    <i class="fa-brands fa-google-drive text-base"></i> Google Drive Sync
+                </button>
+            </div>
+
+            <form onsubmit="changePassword(event)" class="space-y-3 pt-2 border-t border-slate-200 dark:border-slate-800">
+                <p class="text-xs font-semibold text-slate-500 dark:text-slate-400">Change Password</p>
+                <input type="password" id="oldPass" required placeholder="Old Password" class="w-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-white">
+                <input type="password" id="newPass" required placeholder="New Password" class="w-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-white">
+                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2.5 rounded-xl text-sm cursor-pointer">Change Password</button>
             </form>
-            <div class="pt-2 border-t border-slate-100 dark:border-slate-800">
+            <div class="pt-2 border-t border-slate-200 dark:border-slate-800">
                 <button type="button" onclick="setupBiometric()" class="w-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 font-semibold py-2.5 rounded-xl text-xs transition cursor-pointer flex items-center justify-center gap-2">
                     <i class="fa-solid fa-fingerprint text-base"></i> Enable Biometric Login
                 </button>
@@ -91,34 +106,28 @@
     </div>
 
     <!-- Header -->
-    <header class="bg-indigo-600 dark:bg-indigo-950 text-white shadow-md sticky top-0 z-40 no-print transition-colors duration-200">
+    <header class="bg-white dark:bg-slate-950 text-slate-900 dark:text-white sticky top-0 z-40 no-print border-b border-slate-200 dark:border-slate-900 transition-colors duration-200">
         <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center space-x-2.5">
-                <div class="bg-white/10 p-2 rounded-xl">
-                    <i class="fa-solid fa-users-rectangle text-xl text-amber-300"></i>
+                <div class="bg-amber-500/20 p-2.5 rounded-2xl text-amber-600 dark:text-amber-400">
+                    <i class="fa-solid fa-users-rectangle text-xl"></i>
                 </div>
                 <div>
                     <h1 class="text-base sm:text-lg font-bold leading-tight">Party Management Pro</h1>
-                    <p class="text-[10px] sm:text-xs text-indigo-200">Smart Directory & Sync</p>
+                    <p class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400">Smart Directory & Sync</p>
                 </div>
             </div>
             <div class="flex items-center gap-1.5">
-                <button onclick="toggleDarkMode()" title="Toggle Dark Mode" class="bg-white/10 hover:bg-white/20 p-2 rounded-xl text-xs font-medium transition active:scale-95 cursor-pointer">
-                    <i id="darkModeIcon" class="fa-solid fa-moon"></i>
-                </button>
-                <button onclick="handleGoogleDriveAuth()" id="driveAuthBtn" title="Google Drive Sync" class="bg-white/10 hover:bg-white/20 px-2.5 py-2 rounded-xl text-xs font-medium transition active:scale-95 cursor-pointer flex items-center gap-1">
-                    <i class="fa-brands fa-google-drive text-amber-300"></i> <span id="driveStatusText" class="hidden sm:inline">Drive</span>
-                </button>
-                <button onclick="openSettingsModal()" title="Settings" class="bg-white/10 hover:bg-white/20 p-2 rounded-xl text-xs font-medium transition active:scale-95 cursor-pointer">
+                <button onclick="openSettingsModal()" title="Settings" class="bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 p-2.5 rounded-xl text-xs text-slate-700 dark:text-slate-300 transition active:scale-95 cursor-pointer border border-slate-200 dark:border-slate-800">
                     <i class="fa-solid fa-gear"></i>
                 </button>
-                <button onclick="printReport()" title="Print / PDF" class="bg-white/10 hover:bg-white/20 p-2 rounded-xl text-xs font-medium transition active:scale-95 cursor-pointer">
+                <button onclick="printReport()" title="Print / PDF" class="bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 p-2.5 rounded-xl text-xs text-slate-700 dark:text-slate-300 transition active:scale-95 cursor-pointer border border-slate-200 dark:border-slate-800">
                     <i class="fa-solid fa-print"></i>
                 </button>
-                <button onclick="exportData()" title="Export JSON" class="bg-white/10 hover:bg-white/20 p-2 rounded-xl text-xs font-medium transition active:scale-95 cursor-pointer">
+                <button onclick="exportData()" title="Export JSON" class="bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 p-2.5 rounded-xl text-xs text-slate-700 dark:text-slate-300 transition active:scale-95 cursor-pointer border border-slate-200 dark:border-slate-800">
                     <i class="fa-solid fa-download"></i>
                 </button>
-                <label title="Import JSON" class="bg-white/10 hover:bg-white/20 p-2 rounded-xl text-xs font-medium transition active:scale-95 cursor-pointer inline-block">
+                <label title="Import JSON" class="bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 p-2.5 rounded-xl text-xs text-slate-700 dark:text-slate-300 transition active:scale-95 cursor-pointer inline-block border border-slate-200 dark:border-slate-800">
                     <i class="fa-solid fa-upload"></i>
                     <input type="file" id="importFile" class="hidden" accept=".json" onchange="importData(event)">
                 </label>
@@ -130,121 +139,119 @@
         
         <!-- Dashboard Overview -->
         <div class="grid grid-cols-2 gap-3 no-print">
-            <div class="bg-white dark:bg-slate-900 p-3.5 rounded-2xl shadow-xs border border-slate-200/80 dark:border-slate-800 flex items-center justify-between transition duration-200">
+            <div class="bg-white dark:bg-slate-900 p-4 rounded-3xl border border-slate-200 dark:border-slate-800 flex items-center justify-between shadow-xs">
                 <div>
-                    <p class="text-[11px] font-semibold text-slate-400 uppercase">Total Parties</p>
-                    <h3 id="totalPartiesCount" class="text-xl font-bold text-slate-700 dark:text-slate-200">0</h3>
+                    <p class="text-[10px] font-bold text-slate-500 dark:text-slate-400 tracking-wider uppercase">Total Parties</p>
+                    <h3 id="totalPartiesCount" class="text-2xl font-bold text-slate-900 dark:text-white mt-1">0</h3>
                 </div>
-                <div class="w-10 h-10 bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 rounded-xl flex items-center justify-center">
-                    <i class="fa-solid fa-user-group text-sm"></i>
+                <div class="w-12 h-12 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 rounded-2xl flex items-center justify-center border border-indigo-100 dark:border-indigo-950">
+                    <i class="fa-solid fa-user-group text-base"></i>
                 </div>
             </div>
-            <div onclick="openGalleryModal()" class="bg-white dark:bg-slate-900 p-3.5 rounded-2xl shadow-xs border border-slate-200/80 dark:border-slate-800 flex items-center justify-between cursor-pointer hover:border-indigo-400 dark:hover:border-indigo-500 transition duration-200 active:scale-98">
+            <div onclick="openGalleryModal()" class="bg-white dark:bg-slate-900 p-4 rounded-3xl border border-slate-200 dark:border-slate-800 flex items-center justify-between cursor-pointer hover:border-slate-300 dark:hover:border-slate-700 transition shadow-xs">
                 <div>
-                    <p class="text-[11px] font-semibold text-slate-400 uppercase">Gallery Images</p>
-                    <h3 id="totalImagesCount" class="text-xl font-bold text-slate-700 dark:text-slate-200">0</h3>
+                    <p class="text-[10px] font-bold text-slate-500 dark:text-slate-400 tracking-wider uppercase">Gallery Images</p>
+                    <h3 id="totalImagesCount" class="text-2xl font-bold text-slate-900 dark:text-white mt-1">0</h3>
                 </div>
-                <div class="w-10 h-10 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 rounded-xl flex items-center justify-center">
-                    <i class="fa-solid fa-images text-sm"></i>
+                <div class="w-12 h-12 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 rounded-2xl flex items-center justify-center border border-emerald-100 dark:border-emerald-950">
+                    <i class="fa-solid fa-images text-base"></i>
                 </div>
             </div>
         </div>
 
         <!-- Category Filter Tags -->
-        <div class="flex items-center gap-1.5 overflow-x-auto pb-1 no-print" id="categoryFilterContainer">
-            <button onclick="filterCategory('All')" id="cat_All" class="category-btn bg-indigo-600 text-white px-3 py-1.5 rounded-xl text-xs font-semibold shrink-0 cursor-pointer shadow-xs transition duration-200">All</button>
-            <button onclick="filterCategory('Dealer')" id="cat_Dealer" class="category-btn bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800 px-3 py-1.5 rounded-xl text-xs font-semibold shrink-0 cursor-pointer transition duration-200">Dealer</button>
-            <button onclick="filterCategory('Site Delivery')" id="cat_Site Delivery" class="category-btn bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800 px-3 py-1.5 rounded-xl text-xs font-semibold shrink-0 cursor-pointer transition duration-200">Site Delivery</button>
+        <div class="flex items-center gap-2 overflow-x-auto pb-1 no-print" id="categoryFilterContainer">
+            <button onclick="filterCategory('All')" id="cat_All" class="category-btn bg-indigo-600 text-white px-4 py-2 rounded-2xl text-xs font-semibold shrink-0 cursor-pointer shadow-md">All</button>
+            <button onclick="filterCategory('Dealer')" id="cat_Dealer" class="category-btn bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 px-4 py-2 rounded-2xl text-xs font-semibold shrink-0 cursor-pointer">Dealer</button>
+            <button onclick="filterCategory('Site Delivery')" id="cat_Site_Delivery" class="category-btn bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 px-4 py-2 rounded-2xl text-xs font-semibold shrink-0 cursor-pointer">Site Delivery</button>
         </div>
 
         <!-- Add New Party Button -->
-        <button onclick="openFormModal()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-2xl shadow-sm transition active:scale-98 cursor-pointer flex items-center justify-center gap-2 text-sm no-print">
+        <button onclick="openFormModal()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3.5 px-4 rounded-2xl shadow-lg transition active:scale-98 cursor-pointer flex items-center justify-center gap-2 text-sm no-print">
             <i class="fa-solid fa-user-plus text-amber-300 text-base"></i> Add New Party
         </button>
 
         <!-- Form Modal -->
-        <div id="formModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 hidden opacity-0 transition-opacity duration-300 flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-            <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 w-full max-w-lg overflow-hidden my-auto transform scale-95 transition-transform duration-300">
-                <div class="bg-slate-50 dark:bg-slate-800/50 px-4 py-3.5 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
-                    <h2 id="formTitle" class="text-indigo-600 dark:text-indigo-400 font-bold text-sm sm:text-base flex items-center gap-2">
-                        <i class="fa-solid fa-user-plus"></i> Add New Party
+        <div id="formModal" class="fixed inset-0 bg-black/50 dark:bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+            <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 w-full max-w-lg overflow-hidden my-auto transform transition-all">
+                <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center bg-white dark:bg-slate-900">
+                    <h2 id="formTitle" class="text-slate-900 dark:text-white font-bold text-base flex items-center gap-2">
+                        Add New Party
                     </h2>
-                    <button type="button" onclick="closeFormModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 w-8 h-8 rounded-full flex items-center justify-center transition cursor-pointer">
-                        <i class="fa-solid fa-xmark text-base"></i>
+                    <button type="button" onclick="closeFormModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-white w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center transition cursor-pointer">
+                        <i class="fa-solid fa-xmark text-sm"></i>
                     </button>
                 </div>
                 
-                <form id="partyForm" onsubmit="saveParty(event)" class="p-4 space-y-3.5 max-h-[80vh] overflow-y-auto">
-                    <input type="hidden" id="partyIndex">
+                <form id="partyForm" onsubmit="saveParty(event)" class="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
+                    <input type="hidden" id="partyId">
                     
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5">Party Name</label>
+                        <input type="text" id="name" required placeholder="Enter name" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-white transition">
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Name <span class="text-rose-500">*</span></label>
-                            <input type="text" id="name" required placeholder="Enter party name" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-white transition">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Category</label>
-                            <select id="category" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-white transition cursor-pointer">
+                            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5">Category</label>
+                            <select id="category" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-white transition cursor-pointer">
                                 <option value="Dealer">Dealer</option>
                                 <option value="Site Delivery">Site Delivery</option>
                             </select>
                         </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                         <div>
-                            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Phone Number 1</label>
-                            <input type="tel" id="phone" placeholder="017xxxxxxxx" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-white transition">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Phone Number 2</label>
-                            <input type="tel" id="phone2" placeholder="018xxxxxxxx" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-white transition">
+                            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5">Party Code</label>
+                            <input type="text" id="code" placeholder="DEALER-01" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-white transition">
                         </div>
                     </div>
 
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Party Code</label>
-                        <input type="text" id="code" placeholder="Code number" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-white transition">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5">Phone 1</label>
+                            <input type="tel" id="phone" placeholder="Phone 1" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-white transition">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5">Phone 2 (Optional)</label>
+                            <input type="tel" id="phone2" placeholder="Phone 2" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-white transition">
+                        </div>
                     </div>
 
                     <div>
-                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Address</label>
-                        <input type="text" id="address" placeholder="Area or address" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-white transition">
+                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5">Address</label>
+                        <input type="text" id="address" placeholder="Enter address" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-white transition">
                     </div>
 
                     <div>
-                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Google Map Link / Location</label>
+                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5">Location URL (Optional)</label>
                         <div class="flex gap-2">
-                            <input type="text" id="mapLink" placeholder="Paste map link" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-white transition">
-                            <button type="button" onclick="pasteFromClipboard()" class="bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 px-3.5 py-2.5 rounded-xl text-slate-700 dark:text-slate-200 text-xs font-medium cursor-pointer transition shrink-0"><i class="fa-regular fa-clipboard mr-1"></i>Paste</button>
+                            <input type="text" id="mapLink" placeholder="https://..." class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-white transition">
                         </div>
                     </div>
 
                     <div>
-                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Quick Notes</label>
-                        <textarea id="notes" placeholder="Write notes or details..." rows="2" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-white transition"></textarea>
+                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5">Notes</label>
+                        <textarea id="notes" placeholder="Additional notes" rows="2" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-white transition"></textarea>
                     </div>
 
                     <div>
-                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Party Image</label>
-                        <input type="file" id="partyImage" accept="image/*" class="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 bg-slate-50 dark:bg-slate-800 text-xs text-slate-500 dark:text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer">
+                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5">Party Image File</label>
+                        <input type="file" id="partyImage" accept="image/*" class="w-full border border-slate-200 dark:border-slate-800 rounded-2xl px-3 py-2.5 bg-slate-50 dark:bg-slate-950 text-xs text-slate-500 dark:text-slate-400 file:mr-3 file:py-1 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-700 cursor-pointer">
                     </div>
 
-                    <div class="flex gap-2.5 pt-2">
-                        <button type="submit" id="saveBtn" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 px-4 rounded-xl text-sm shadow-xs transition active:scale-98 cursor-pointer">Save</button>
-                        <button type="button" onclick="resetForm()" class="bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-medium py-2.5 px-4 rounded-xl text-sm transition active:scale-98 cursor-pointer">Reset</button>
+                    <div class="pt-2">
+                        <button type="submit" id="saveBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3.5 px-4 rounded-2xl text-sm shadow-lg transition active:scale-98 cursor-pointer">Save Party</button>
                     </div>
                 </form>
             </div>
         </div>
 
         <!-- Search & Sorting Bar -->
-        <div class="sticky top-[58px] z-30 bg-slate-100/90 dark:bg-slate-950/90 backdrop-blur-md py-1 no-print flex gap-2">
-            <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-xs border border-slate-200/80 dark:border-slate-800 flex items-center px-3.5 py-2 flex-1 transition duration-200 focus-within:ring-2 focus-within:ring-indigo-500">
+        <div class="sticky top-[58px] z-30 bg-slate-50/90 dark:bg-slate-950/90 backdrop-blur-md py-1 no-print flex gap-2">
+            <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 flex items-center px-4 py-2.5 flex-1 shadow-xs">
                 <i class="fa-solid fa-magnifying-glass text-slate-400 mr-2.5 text-sm"></i>
-                <input type="text" id="searchInput" onkeyup="renderParties()" placeholder="Search by name, phone or code..." class="w-full bg-transparent text-sm focus:outline-none text-slate-700 dark:text-slate-200 placeholder-slate-400">
+                <input type="text" id="searchInput" onkeyup="renderParties()" placeholder="Search by name, phone or code..." class="w-full bg-transparent text-sm focus:outline-none text-slate-900 dark:text-white placeholder-slate-400">
             </div>
-            <select id="sortSelect" onchange="renderParties()" class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl px-3 text-xs font-semibold text-slate-600 dark:text-slate-300 focus:outline-none cursor-pointer shadow-xs transition duration-200">
+            <select id="sortSelect" onchange="renderParties()" class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl px-3 text-xs font-semibold text-slate-700 dark:text-slate-300 focus:outline-none cursor-pointer shadow-xs">
                 <option value="newest">Newest First</option>
                 <option value="name-asc">Name (A-Z)</option>
                 <option value="name-desc">Name (Z-A)</option>
@@ -263,45 +270,45 @@
     </main>
 
     <!-- Party Detail / Action Modal -->
-    <div id="partyDetailModal" class="fixed inset-0 bg-black/70 backdrop-blur-xs z-50 hidden opacity-0 transition-opacity duration-300 flex items-center justify-center p-4 no-print">
-        <div class="bg-white dark:bg-slate-900 rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-800 transform scale-95 transition-transform duration-300 p-5 space-y-4">
-            <div class="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-3">
-                <h3 id="detailPartyName" class="font-bold text-slate-800 dark:text-white text-base">Party Details</h3>
-                <button onclick="closePartyDetailModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 w-8 h-8 rounded-full flex items-center justify-center transition cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
+    <div id="partyDetailModal" class="fixed inset-0 bg-black/50 dark:bg-black/80 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4 no-print">
+        <div class="bg-white dark:bg-slate-900 rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-800 p-5 space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-200 dark:border-slate-800 pb-3">
+                <h3 id="detailPartyName" class="font-bold text-slate-900 dark:text-white text-base">Party Details</h3>
+                <button onclick="closePartyDetailModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-white w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center transition cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             
-            <div id="detailContentBody" class="space-y-3 text-xs text-slate-600 dark:text-slate-300">
+            <div id="detailContentBody" class="space-y-2 text-xs text-slate-600 dark:text-slate-300">
                 <!-- Dynamic Content Here -->
             </div>
 
-            <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-100 dark:border-slate-800" id="detailActionButtons">
-                <!-- Action Buttons -->
+            <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200 dark:border-slate-800" id="detailActionButtons">
+                <!-- Action Buttons: Edit, Delete -->
             </div>
         </div>
     </div>
 
     <!-- Gallery Modal -->
-    <div id="galleryModal" class="fixed inset-0 bg-black/80 backdrop-blur-xs z-50 hidden opacity-0 transition-opacity duration-300 flex items-center justify-center p-4 no-print">
-        <div class="bg-white dark:bg-slate-900 rounded-3xl w-full max-w-2xl max-h-[85vh] flex flex-col overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-800 transform scale-95 transition-transform duration-300">
-            <div class="px-5 py-4 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
-                <h3 class="font-bold text-slate-800 dark:text-white text-base"><i class="fa-solid fa-images text-indigo-600 dark:text-indigo-400 mr-2"></i>Party Image Gallery</h3>
-                <button onclick="closeGalleryModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 w-8 h-8 rounded-full flex items-center justify-center transition cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
+    <div id="galleryModal" class="fixed inset-0 bg-black/80 dark:bg-black/90 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4 no-print">
+        <div class="bg-white dark:bg-slate-900 rounded-3xl w-full max-w-2xl max-h-[85vh] flex flex-col overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-800">
+            <div class="px-5 py-4 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center bg-white dark:bg-slate-900">
+                <h3 class="font-bold text-slate-900 dark:text-white text-base"><i class="fa-solid fa-images text-emerald-600 dark:text-emerald-400 mr-2"></i>Party Image Gallery</h3>
+                <button onclick="closeGalleryModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-white w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center transition cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             <div id="galleryGridContainer" class="p-4 grid grid-cols-2 sm:grid-cols-3 gap-3 overflow-y-auto"></div>
         </div>
     </div>
 
     <!-- Image Preview Modal -->
-    <div id="imageModal" class="fixed inset-0 bg-black/90 backdrop-blur-xs z-50 hidden opacity-0 transition-opacity duration-300 flex items-center justify-center p-4 no-print" onclick="closeImageModal()">
-        <div class="relative max-w-md w-full bg-white dark:bg-slate-900 rounded-2xl p-2 shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-800 transform scale-95 transition-transform duration-300" onclick="event.stopPropagation()">
+    <div id="imageModal" class="fixed inset-0 bg-black/90 dark:bg-black/95 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4 no-print" onclick="closeImageModal()">
+        <div class="relative max-w-md w-full bg-white dark:bg-slate-900 rounded-3xl p-2 shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-800" onclick="event.stopPropagation()">
             <button onclick="closeImageModal()" class="absolute top-3 right-3 bg-black/60 text-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-black transition cursor-pointer z-10"><i class="fa-solid fa-xmark"></i></button>
-            <img id="modalImageElement" src="" class="w-full h-auto max-h-[75vh] object-contain rounded-xl">
+            <img id="modalImageElement" src="" class="w-full h-auto max-h-[75vh] object-contain rounded-2xl">
         </div>
     </div>
 
     <!-- Toast Notification -->
-    <div id="toast" class="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-4 sm:max-w-xs z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-xl text-xs sm:text-sm flex items-center gap-2.5 no-print pointer-events-none">
-        <i id="toastIcon" class="fa-solid fa-circle-check text-emerald-400 text-base"></i>
+    <div id="toast" class="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-4 sm:max-w-xs z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white px-4 py-3 rounded-2xl shadow-xl text-xs sm:text-sm flex items-center gap-2.5 no-print">
+        <i id="toastIcon" class="fa-solid fa-circle-check text-emerald-600 dark:text-emerald-400 text-base"></i>
         <span id="toastMessage" class="flex-1">Completed successfully!</span>
     </div>
 
@@ -314,22 +321,37 @@
             localStorage.setItem('appPassword', '1234');
         }
 
-        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        // Dark mode check
+        if (localStorage.getItem('theme') === 'light') {
+            document.documentElement.classList.remove('dark');
+            updateDarkModeUI(false);
+        } else {
             document.documentElement.classList.add('dark');
-            const icon = document.getElementById('darkModeIcon');
-            if (icon) icon.className = "fa-solid fa-sun";
+            updateDarkModeUI(true);
         }
 
         function toggleDarkMode() {
-            const icon = document.getElementById('darkModeIcon');
-            if (document.documentElement.classList.contains('dark')) {
-                document.documentElement.classList.remove('dark');
-                localStorage.setItem('theme', 'light');
-                if (icon) icon.className = "fa-solid fa-moon";
-            } else {
-                document.documentElement.classList.add('dark');
+            const isDark = document.documentElement.classList.toggle('dark');
+            if (isDark) {
                 localStorage.setItem('theme', 'dark');
-                if (icon) icon.className = "fa-solid fa-sun";
+                updateDarkModeUI(true);
+                showToast('Dark mode enabled', 'success');
+            } else {
+                localStorage.setItem('theme', 'light');
+                updateDarkModeUI(false);
+                showToast('Light mode enabled', 'success');
+            }
+        }
+
+        function updateDarkModeUI(isDark) {
+            const btn = document.getElementById('darkModeToggleBtn');
+            const circle = document.getElementById('darkModeCircle');
+            if (isDark) {
+                btn.className = "w-12 h-6 flex items-center bg-indigo-600 rounded-full p-1 transition duration-300 cursor-pointer";
+                circle.className = "bg-white w-4 h-4 rounded-full shadow-md transform translate-x-6 transition duration-300";
+            } else {
+                btn.className = "w-12 h-6 flex items-center bg-slate-300 rounded-full p-1 transition duration-300 cursor-pointer";
+                circle.className = "bg-white w-4 h-4 rounded-full shadow-md transform translate-x-0 transition duration-300";
             }
         }
 
@@ -338,7 +360,7 @@
             const inputPass = document.getElementById('loginPassword').value;
             const savedPass = localStorage.getItem('appPassword');
             if (inputPass === savedPass) {
-                closeModal('authModal');
+                document.getElementById('authModal').classList.add('hidden');
                 showToast('Login successful!', 'success');
             } else {
                 alert('Incorrect password! Please try again.');
@@ -349,7 +371,7 @@
         async function setupBiometric() {
             try {
                 if (!window.PublicKeyCredential) {
-                    alert('Biometric authentication is not supported on this device/browser!');
+                    alert('Biometric authentication is not supported!');
                     return;
                 }
                 const challenge = new Uint8Array(32);
@@ -402,7 +424,7 @@
 
                 const assertion = await navigator.credentials.get({ publicKey });
                 if (assertion) {
-                    closeModal('authModal');
+                    document.getElementById('authModal').classList.add('hidden');
                     showToast('Fingerprint verification successful!', 'success');
                 }
             } catch (err) {
@@ -411,37 +433,8 @@
             }
         }
 
-        // Animated Modal Helpers
-        function openModal(modalId) {
-            const modal = document.getElementById(modalId);
-            if (!modal) return;
-            modal.classList.remove('hidden');
-            requestAnimationFrame(() => {
-                modal.classList.remove('opacity-0');
-                const content = modal.firstElementChild;
-                if (content) {
-                    content.classList.remove('scale-95');
-                    content.classList.add('scale-100');
-                }
-            });
-        }
-
-        function closeModal(modalId) {
-            const modal = document.getElementById(modalId);
-            if (!modal) return;
-            modal.classList.add('opacity-0');
-            const content = modal.firstElementChild;
-            if (content) {
-                content.classList.remove('scale-100');
-                content.classList.add('scale-95');
-            }
-            setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 300);
-        }
-
-        function openForgotModal() { openModal('forgotModal'); }
-        function closeForgotModal() { closeModal('forgotModal'); }
+        function openForgotModal() { document.getElementById('forgotModal').classList.remove('hidden'); }
+        function closeForgotModal() { document.getElementById('forgotModal').classList.add('hidden'); }
 
         function resetPassword(e) {
             e.preventDefault();
@@ -457,8 +450,8 @@
             }
         }
 
-        function openSettingsModal() { openModal('settingsModal'); }
-        function closeSettingsModal() { closeModal('settingsModal'); }
+        function openSettingsModal() { document.getElementById('settingsModal').classList.remove('hidden'); }
+        function closeSettingsModal() { document.getElementById('settingsModal').classList.add('hidden'); }
 
         function changePassword(e) {
             e.preventDefault();
@@ -480,302 +473,364 @@
         function filterCategory(cat) {
             currentCategoryFilter = cat;
             document.querySelectorAll('.category-btn').forEach(btn => {
-                btn.className = "category-btn bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800 px-3 py-1.5 rounded-xl text-xs font-semibold shrink-0 cursor-pointer transition duration-200";
+                btn.className = "category-btn bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 px-4 py-2 rounded-2xl text-xs font-semibold shrink-0 cursor-pointer shadow-xs";
             });
-            const activeBtn = document.getElementById(`cat_${cat}`);
+            const safeId = 'cat_' + cat.replace(/\s+/g, '_');
+            const activeBtn = document.getElementById(safeId);
             if (activeBtn) {
-                activeBtn.className = "category-btn bg-indigo-600 text-white px-3 py-1.5 rounded-xl text-xs font-semibold shrink-0 cursor-pointer shadow-xs transition duration-200";
+                activeBtn.className = "category-btn bg-indigo-600 text-white px-4 py-2 rounded-2xl text-xs font-semibold shrink-0 cursor-pointer shadow-md";
             }
             renderParties();
         }
 
-        function renderParties() {
-            const container = document.getElementById('partyListContainer');
-            const searchVal = document.getElementById('searchInput').value.toLowerCase().trim();
-            const sortVal = document.getElementById('sortSelect').value;
-
-            let filtered = parties.filter(p => {
-                const matchesCategory = (currentCategoryFilter === 'All') || (p.category === currentCategoryFilter);
-                const matchesSearch = !searchVal || 
-                    (p.name && p.name.toLowerCase().includes(searchVal)) ||
-                    (p.phone && p.phone.includes(searchVal)) ||
-                    (p.phone2 && p.phone2.includes(searchVal)) ||
-                    (p.code && p.code.toLowerCase().includes(searchVal));
-                return matchesCategory && matchesSearch;
-            });
-
-            if (sortVal === 'name-asc') {
-                filtered.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
-            } else if (sortVal === 'name-desc') {
-                filtered.sort((a, b) => (b.name || '').localeCompare(a.name || ''));
+        function openFormModal(partyId = null) {
+            resetForm();
+            if (partyId !== null) {
+                document.getElementById('formTitle').innerHTML = 'Edit Party';
+                document.getElementById('saveBtn').textContent = 'Update Party';
+                document.getElementById('partyId').value = partyId;
+                const p = parties.find(item => item.id === partyId);
+                if (p) {
+                    document.getElementById('name').value = p.name || '';
+                    document.getElementById('category').value = p.category || 'Dealer';
+                    document.getElementById('phone').value = p.phone || '';
+                    document.getElementById('phone2').value = p.phone2 || '';
+                    document.getElementById('code').value = p.code || '';
+                    document.getElementById('address').value = p.address || '';
+                    document.getElementById('mapLink').value = p.mapLink || '';
+                    document.getElementById('notes').value = p.notes || '';
+                }
             } else {
-                filtered.reverse();
+                document.getElementById('formTitle').innerHTML = 'Add New Party';
+                document.getElementById('saveBtn').textContent = 'Save Party';
             }
-
-            document.getElementById('totalPartiesCount').innerText = parties.length;
-            const imgCount = parties.filter(p => p.image).length;
-            document.getElementById('totalImagesCount').innerText = imgCount;
-
-            if (filtered.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-10 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 transition duration-200">
-                        <i class="fa-solid fa-folder-open text-3xl text-slate-300 dark:text-slate-600 mb-2"></i>
-                        <p class="text-xs text-slate-400">No matching parties found</p>
-                    </div>`;
-                return;
-            }
-
-            container.innerHTML = filtered.map((party) => {
-                const originalIndex = parties.indexOf(party);
-                return `
-                    <div class="bg-white dark:bg-slate-900 rounded-2xl p-4 shadow-xs border border-slate-200/80 dark:border-slate-800 flex items-center justify-between gap-3 hover:border-indigo-300 dark:hover:border-indigo-700 transition duration-200">
-                        <div class="flex items-center gap-3 cursor-pointer overflow-hidden flex-1" onclick="openPartyDetailModal(${originalIndex})">
-                            ${party.image ? 
-                                `<img src="\${party.image}" class="w-12 h-12 rounded-xl object-cover shrink-0 border border-slate-100 dark:border-slate-800">` : 
-                                `<div class="w-12 h-12 bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 rounded-xl flex items-center justify-center font-bold text-lg shrink-0">\${party.name ? party.name.charAt(0).toUpperCase() : 'P'}</div>`
-                            }
-                            <div class="truncate">
-                                <h4 class="font-bold text-sm text-slate-800 dark:text-white truncate">${party.name}</h4>
-                                <p class="text-xs text-slate-400 flex items-center gap-2 mt-0.5">
-                                    <span><i class="fa-solid fa-phone text-[10px] mr-1"></i>${party.phone || 'N/A'}</span>
-                                    ${party.code ? `<span class="bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded text-[10px] font-semibold text-slate-600 dark:text-slate-300">\${party.code}</span>` : ''}
-                                </p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-2 no-print shrink-0">
-                            ${party.phone ? `
-                                <a href="https://wa.me/\${party.phone.replace(/[^0-9]/g, '')}" target="_blank" class="w-9 h-9 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 rounded-xl flex items-center justify-center hover:bg-emerald-100 transition active:scale-95 text-sm">
-                                    <i class="fa-brands fa-whatsapp"></i>
-                                </a>` : ''
-                            }
-                            ${party.phone ? `
-                                <a href="tel:\${party.phone}" class="w-9 h-9 bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 rounded-xl flex items-center justify-center hover:bg-blue-100 transition active:scale-95 text-sm">
-                                    <i class="fa-solid fa-phone"></i>
-                                </a>` : ''
-                            }
-                            ${party.mapLink ? `
-                                <a href="\${party.mapLink}" target="_blank" class="w-9 h-9 bg-rose-50 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400 rounded-xl flex items-center justify-center hover:bg-rose-100 transition active:scale-95 text-sm" title="Google Map">
-                                    <i class="fa-solid fa-location-dot"></i>
-                                </a>` : `
-                                <button onclick="showToast('No map link provided for this party', 'info')" class="w-9 h-9 bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-600 rounded-xl flex items-center justify-center cursor-not-allowed text-sm" title="No Map Link">
-                                    <i class="fa-solid fa-location-dot"></i>
-                                </button>`
-                            }
-                        </div>
-                    </div>`;
-            }).join('');
-        }
-
-        function openFormModal(index = null) {
-            openModal('formModal');
-            if (index !== null && parties[index]) {
-                const p = parties[index];
-                document.getElementById('formTitle').innerHTML = '<i class="fa-solid fa-pen-to-square"></i> Edit Party';
-                document.getElementById('partyIndex').value = index;
-                document.getElementById('name').value = p.name || '';
-                document.getElementById('category').value = p.category || 'Dealer';
-                document.getElementById('phone').value = p.phone || '';
-                document.getElementById('phone2').value = p.phone2 || '';
-                document.getElementById('code').value = p.code || '';
-                document.getElementById('address').value = p.address || '';
-                document.getElementById('mapLink').value = p.mapLink || '';
-                document.getElementById('notes').value = p.notes || '';
-            } else {
-                resetForm();
-            }
+            document.getElementById('formModal').classList.remove('hidden');
         }
 
         function closeFormModal() {
-            closeModal('formModal');
-            resetForm();
+            document.getElementById('formModal').classList.add('hidden');
         }
 
         function resetForm() {
-            document.getElementById('formTitle').innerHTML = '<i class="fa-solid fa-user-plus"></i> Add New Party';
             document.getElementById('partyForm').reset();
-            document.getElementById('partyIndex').value = '';
+            document.getElementById('partyId').value = '';
         }
 
         function saveParty(e) {
             e.preventDefault();
-            const index = document.getElementById('partyIndex').value;
-            const fileInput = document.getElementById('partyImage');
+            const id = document.getElementById('partyId').value;
+            const name = document.getElementById('name').value.trim();
+            const category = document.getElementById('category').value;
+            const phone = document.getElementById('phone').value.trim();
+            const phone2 = document.getElementById('phone2').value.trim();
+            const code = document.getElementById('code').value.trim();
+            const address = document.getElementById('address').value.trim();
+            const mapLink = document.getElementById('mapLink').value.trim();
+            const notes = document.getElementById('notes').value.trim();
+            const imageInput = document.getElementById('partyImage');
 
-            const partyData = {
-                name: document.getElementById('name').value.trim(),
-                category: document.getElementById('category').value,
-                phone: document.getElementById('phone').value.trim(),
-                phone2: document.getElementById('phone2').value.trim(),
-                code: document.getElementById('code').value.trim(),
-                address: document.getElementById('address').value.trim(),
-                mapLink: document.getElementById('mapLink').value.trim(),
-                notes: document.getElementById('notes').value.trim(),
-                image: (index !== '' && parties[index]) ? parties[index].image : ''
-            };
-
-            const finalizeSave = () => {
-                if (index !== '') {
-                    parties[index] = partyData;
-                    showToast('Party updated successfully!', 'success');
+            const handlePartyData = (imageData) => {
+                if (id !== '') {
+                    const index = parties.findIndex(item => item.id === id);
+                    if (index !== -1) {
+                        parties[index] = {
+                            ...parties[index],
+                            name,
+                            category,
+                            phone,
+                            phone2,
+                            code,
+                            address,
+                            mapLink,
+                            notes,
+                            image: imageData || parties[index].image
+                        };
+                        showToast('Party updated successfully!', 'success');
+                    }
                 } else {
-                    parties.push(partyData);
-                    showToast('Party saved successfully!', 'success');
+                    const newParty = {
+                        id: 'party_' + Date.now() + Math.random().toString(36).substr(2, 5),
+                        name,
+                        category,
+                        phone,
+                        phone2,
+                        code,
+                        address,
+                        mapLink,
+                        notes,
+                        image: imageData || '',
+                        createdAt: new Date().toISOString()
+                    };
+                    parties.unshift(newParty);
+                    showToast('Party added successfully!', 'success');
                 }
+
                 localStorage.setItem('parties', JSON.stringify(parties));
-                renderParties();
                 closeFormModal();
+                renderParties();
             };
 
-            if (fileInput.files && fileInput.files[0]) {
+            if (imageInput.files && imageInput.files[0]) {
                 const reader = new FileReader();
-                reader.onload = function(evt) {
-                    partyData.image = evt.target.result;
-                    finalizeSave();
+                reader.onload = function(uploadEvent) {
+                    handlePartyData(uploadEvent.target.result);
                 };
-                reader.readAsDataURL(fileInput.files[0]);
+                reader.readAsDataURL(imageInput.files[0]);
             } else {
-                finalizeSave();
+                handlePartyData(null);
             }
         }
 
-        function deleteParty(index) {
-            if (confirm('Are you sure you want to delete this party?')) {
-                parties.splice(index, 1);
-                localStorage.setItem('parties', JSON.stringify(parties));
-                renderParties();
-                closePartyDetailModal();
-                showToast('Party deleted successfully!', 'info');
+        function renderParties() {
+            const container = document.getElementById('partyListContainer');
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const sort = document.getElementById('sortSelect').value;
+
+            document.getElementById('totalPartiesCount').textContent = parties.length;
+            
+            let totalImages = parties.filter(p => (p.image && p.image.trim() !== '')).length;
+            document.getElementById('totalImagesCount').textContent = totalImages;
+
+            let filtered = parties.filter(p => {
+                const matchesCat = currentCategoryFilter === 'All' || p.category === currentCategoryFilter;
+                const matchesSearch = (p.name && p.name.toLowerCase().includes(search)) ||
+                                      (p.phone && p.phone.toLowerCase().includes(search)) ||
+                                      (p.phone2 && p.phone2.toLowerCase().includes(search)) ||
+                                      (p.code && p.code.toLowerCase().includes(search)) ||
+                                      (p.address && p.address.toLowerCase().includes(search));
+                return matchesCat && matchesSearch;
+            });
+
+            if (sort === 'newest') {
+                filtered.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+            } else if (sort === 'name-asc') {
+                filtered.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+            } else if (sort === 'name-desc') {
+                filtered.sort((a, b) => (b.name || '').localeCompare(a.name || ''));
             }
+
+            if (search.trim() !== '') {
+                filtered.sort((a, b) => {
+                    const aName = (a.name || '').toLowerCase();
+                    const bName = (b.name || '').toLowerCase();
+                    
+                    const aExact = aName === search;
+                    const bExact = bName === search;
+                    if (aExact && !bExact) return -1;
+                    if (!aExact && bExact) return 1;
+
+                    const aStarts = aName.startsWith(search);
+                    const bStarts = bName.startsWith(search);
+                    if (aStarts && !bStarts) return -1;
+                    if (!aStarts && bStarts) return 1;
+
+                    return 0; 
+                });
+            }
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="bg-white dark:bg-slate-900 rounded-3xl p-8 text-center border border-slate-200 dark:border-slate-800 space-y-2 shadow-xs">
+                        <div class="w-12 h-12 bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 rounded-2xl flex items-center justify-center mx-auto text-lg">
+                            <i class="fa-solid fa-folder-open"></i>
+                        </div>
+                        <h4 class="text-sm font-bold text-slate-700 dark:text-slate-300">No parties found</h4>
+                        <p class="text-xs text-slate-400">Try changing your search keyword or category filter.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            filtered.forEach((p) => {
+                const displayImage = p.image;
+                const hasImg = displayImage && displayImage.trim() !== '';
+                const initial = p.name ? p.name.charAt(0).toUpperCase() : 'P';
+
+                html += `
+                    <div class="bg-white dark:bg-slate-900 rounded-3xl p-4 shadow-xs border border-slate-200 dark:border-slate-800/80 flex items-center justify-between gap-3 transition hover:border-slate-300 dark:hover:border-slate-700">
+                        <div class="flex items-center gap-3.5 flex-1 min-w-0 cursor-pointer" onclick="openPartyDetail('${p.id}')">
+                            <div class="w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0 font-bold text-base overflow-hidden border border-indigo-100 dark:border-indigo-900/50">
+                                ${hasImg ? '<img src="' + displayImage + '" class="w-full h-full object-cover">' : initial}
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <h4 class="font-bold text-slate-900 dark:text-white text-sm truncate">${p.name || ''}</h4>
+                                <div class="flex items-center gap-2 mt-1 flex-wrap">
+                                    <span class="text-xs text-slate-500 dark:text-slate-400"><i class="fa-solid fa-phone text-[10px] mr-1"></i>${p.phone || 'No phone'}</span>
+                                    ${p.code ? '<span class="px-2 py-0.5 rounded-lg text-[10px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">' + p.code + '</span>' : ''}
+                                </div>
+                                ${p.address ? '<p class="text-[11px] text-slate-500 dark:text-slate-400 truncate mt-0.5"><i class="fa-solid fa-location-dot text-[9px] mr-1 text-indigo-600 dark:text-indigo-400"></i>' + p.address + '</p>' : ''}
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 shrink-0">
+                            ${p.phone ? '<a href="https://wa.me/' + p.phone.replace(/[^0-9]/g, '') + '" target="_blank" title="WhatsApp Chat" class="w-10 h-10 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900/50 flex items-center justify-center hover:bg-emerald-100 dark:hover:bg-emerald-900/50 transition"><i class="fa-brands fa-whatsapp text-sm"></i></a>' : ''}
+                            ${p.phone ? '<a href="tel:' + p.phone + '" title="Call Phone" class="w-10 h-10 rounded-2xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-900/50 flex items-center justify-center hover:bg-blue-100 dark:hover:bg-blue-900/50 transition"><i class="fa-solid fa-phone text-xs"></i></a>' : ''}
+                            ${p.mapLink ? '<a href="' + (p.mapLink.startsWith('http') ? p.mapLink : '#') + '" target="_blank" title="Location Map" class="w-10 h-10 rounded-2xl bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-900/50 flex items-center justify-center hover:bg-rose-100 dark:hover:bg-rose-900/50 transition"><i class="fa-solid fa-location-dot text-xs"></i></a>' : ''}
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
         }
 
-        function openPartyDetailModal(index) {
-            const p = parties[index];
+        function openPartyDetail(id) {
+            const p = parties.find(item => item.id === id);
             if (!p) return;
+            document.getElementById('detailPartyName').textContent = p.name;
+            
+            const displayImage = p.image;
 
-            document.getElementById('detailPartyName').innerText = p.name;
-            document.getElementById('detailContentBody').innerHTML = `
-                ${p.image ? `<img src="\${p.image}" class="w-full h-36 object-cover rounded-2xl mb-3 border border-slate-100 dark:border-slate-800 cursor-pointer hover:opacity-90 transition" onclick="openImageModal('\${p.image}')">` : ''}
-                <div class="space-y-1.5">
-                    <p><strong>Category:</strong> ${p.category}</p>
+            let contentHtml = `
+                <div class="space-y-2">
+                    <p><strong>Category:</strong> ${p.category || 'N/A'}</p>
                     <p><strong>Phone 1:</strong> ${p.phone || 'N/A'}</p>
-                    ${p.phone2 ? `<p><strong>Phone 2:</strong> \${p.phone2}</p>` : ''}
-                    ${p.code ? `<p><strong>Party Code:</strong> \${p.code}</p>` : ''}
-                    ${p.address ? `<p><strong>Address:</strong> \${p.address}</p>` : ''}
-                    ${p.notes ? `<p><strong>Notes:</strong> \${p.notes}</p>` : ''}
-                    ${p.mapLink ? `<p><a href="\${p.mapLink}" target="_blank" class="text-indigo-600 dark:text-indigo-400 font-semibold hover:underline inline-flex items-center gap-1"><i class="fa-solid fa-map-location-dot"></i> Open Google Maps</a></p>` : ''}
-                </div>`;
+                    <p><strong>Phone 2:</strong> ${p.phone2 || 'N/A'}</p>
+                    <p><strong>Code:</strong> ${p.code || 'N/A'}</p>
+                    <p><strong>Address:</strong> ${p.address || 'N/A'}</p>
+                    <p><strong>Location URL:</strong> ${p.mapLink ? '<a href="' + p.mapLink + '" target="_blank" class="text-indigo-600 dark:text-indigo-400 underline">Open Map</a>' : 'N/A'}</p>
+                    <p><strong>Notes:</strong> ${p.notes || 'N/A'}</p>
+                    ${displayImage ? '<div class="mt-2"><img src="' + displayImage + '" class="w-full h-32 object-cover rounded-2xl cursor-pointer" onclick="openImageModal(\'' + displayImage + '\')"></div>' : ''}
+                </div>
+            `;
+            document.getElementById('detailContentBody').innerHTML = contentHtml;
 
-            document.getElementById('detailActionButtons').innerHTML = `
-                <button onclick="openFormModal(${index}); closePartyDetailModal();" class="bg-indigo-600 text-white font-medium py-2 rounded-xl text-xs hover:bg-indigo-700 transition cursor-pointer active:scale-95">
-                    <i class="fa-solid fa-pen mr-1"></i> Edit
-                </button>
-                <button onclick="deleteParty(${index})" class="bg-rose-50 text-rose-600 border border-rose-200 dark:bg-rose-950/40 dark:border-rose-900 font-medium py-2 rounded-xl text-xs hover:bg-rose-100 transition cursor-pointer active:scale-95">
-                    <i class="fa-solid fa-trash mr-1"></i> Delete
-                </button>`;
-
-            openModal('partyDetailModal');
+            let buttonsHtml = `
+                <button onclick="closePartyDetailModal(); openFormModal('${p.id}')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-xl text-xs transition cursor-pointer"><i class="fa-solid fa-pen-to-square mr-1"></i> Edit</button>
+                <button onclick="deleteParty('${p.id}')" class="bg-rose-50 dark:bg-rose-950/50 hover:bg-rose-100 dark:hover:bg-rose-900/50 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-900 font-medium py-2.5 rounded-xl text-xs transition cursor-pointer"><i class="fa-solid fa-trash mr-1"></i> Delete</button>
+            `;
+            document.getElementById('detailActionButtons').innerHTML = buttonsHtml;
+            document.getElementById('partyDetailModal').classList.remove('hidden');
         }
 
         function closePartyDetailModal() {
-            closeModal('partyDetailModal');
+            document.getElementById('partyDetailModal').classList.add('hidden');
+        }
+
+        function deleteParty(id) {
+            if (confirm('Are you sure you want to delete this party?')) {
+                parties = parties.filter(item => item.id !== id);
+                localStorage.setItem('parties', JSON.stringify(parties));
+                closePartyDetailModal();
+                renderParties();
+                showToast('Party deleted successfully!', 'success');
+            }
         }
 
         function openGalleryModal() {
             const container = document.getElementById('galleryGridContainer');
-            const images = parties.filter(p => p.image);
+            const imgsWithParty = parties.filter(p => (p.image && p.image.trim() !== ''));
             
-            if (images.length === 0) {
-                container.innerHTML = `<p class="col-span-full text-center py-8 text-xs text-slate-400">No party images available.</p>`;
+            if (imgsWithParty.length === 0) {
+                container.innerHTML = `<p class="col-span-full text-center text-xs text-slate-400 py-6">No images found in the gallery.</p>`;
             } else {
-                container.innerHTML = images.map(p => `
-                    <div class="relative group rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 cursor-pointer" onclick="openImageModal('${p.image}')">
-                        <img src="${p.image}" class="w-full h-28 object-cover group-hover:scale-105 transition duration-200">
-                        <div class="absolute inset-x-0 bottom-0 bg-slate-900/70 text-white p-1.5 text-[10px] truncate text-center">${p.name}</div>
-                    </div>`).join('');
+                let html = '';
+                imgsWithParty.forEach(item => {
+                    const imgUrl = item.image;
+                    html += `
+                        <div class="relative group rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 aspect-square cursor-pointer" onclick="openImageModal('${imgUrl}')">
+                            <img src="${imgUrl}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                            <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-2 text-white text-[11px] truncate font-medium">
+                                ${item.name}
+                            </div>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
             }
-            openModal('galleryModal');
+            document.getElementById('galleryModal').classList.remove('hidden');
         }
 
         function closeGalleryModal() {
-            closeModal('galleryModal');
+            document.getElementById('galleryModal').classList.add('hidden');
         }
 
-        function openImageModal(src) {
-            document.getElementById('modalImageElement').src = src;
-            openModal('imageModal');
+        function openImageModal(url) {
+            document.getElementById('modalImageElement').src = url;
+            document.getElementById('imageModal').classList.remove('hidden');
         }
 
         function closeImageModal() {
-            closeModal('imageModal');
+            document.getElementById('imageModal').classList.add('hidden');
         }
 
-        async function pasteFromClipboard() {
-            try {
-                const text = await navigator.clipboard.readText();
-                document.getElementById('mapLink').value = text;
-                showToast('Pasted from clipboard!', 'success');
-            } catch (err) {
-                alert('Clipboard access denied or unavailable.');
-            }
-        }
-
-        function showToast(msg, type = 'success') {
-            const toast = document.getElementById('toast');
-            const icon = document.getElementById('toastIcon');
-            if (type === 'info') {
-                icon.className = "fa-solid fa-circle-info text-blue-400 text-base";
-            } else {
-                icon.className = "fa-solid fa-circle-check text-emerald-400 text-base";
-            }
-            document.getElementById('toastMessage').innerText = msg;
-            toast.classList.remove('translate-y-20', 'opacity-0');
-            setTimeout(() => {
-                toast.classList.add('translate-y-20', 'opacity-0');
-            }, 3000);
+        function printReport() {
+            document.getElementById('printDate').textContent = new Date().toLocaleDateString();
+            window.print();
         }
 
         function exportData() {
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(parties, null, 2));
-            const dlAnchor = document.createElement('a');
-            dlAnchor.setAttribute("href", dataStr);
-            dlAnchor.setAttribute("download", `party_backup_${new Date().toISOString().slice(0, 10)}.json`);
-            document.body.appendChild(dlAnchor);
-            dlAnchor.click();
-            dlAnchor.remove();
+            const dlAnchorElem = document.createElement('a');
+            dlAnchorElem.setAttribute("href", dataStr);
+            dlAnchorElem.setAttribute("download", "party_management_pro_backup.json");
+            dlAnchorElem.click();
+            showToast('Data exported successfully!', 'success');
         }
 
         function importData(e) {
             const file = e.target.files[0];
             if (!file) return;
             const reader = new FileReader();
-            reader.onload = function(evt) {
+            reader.onload = function(uploadEvent) {
                 try {
-                    const imported = JSON.parse(evt.target.result);
-                    if (Array.isArray(imported)) {
-                        parties = imported;
+                    const parsed = JSON.parse(uploadEvent.target.result);
+                    if (Array.isArray(parsed)) {
+                        parties = parsed;
                         localStorage.setItem('parties', JSON.stringify(parties));
                         renderParties();
                         showToast('Data imported successfully!', 'success');
                     } else {
-                        alert('Invalid JSON structure.');
+                        alert('Invalid backup file format!');
                     }
                 } catch (err) {
-                    alert('Error parsing JSON file.');
+                    alert('Error reading JSON file!');
                 }
             };
             reader.readAsText(file);
         }
 
-        function printReport() {
-            document.getElementById('printDate').innerText = new Date().toLocaleDateString();
-            window.print();
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const msgEl = document.getElementById('toastMessage');
+            const iconEl = document.getElementById('toastIcon');
+            
+            msgEl.textContent = message;
+            if (type === 'success') {
+                iconEl.className = "fa-solid fa-circle-check text-emerald-600 dark:text-emerald-400 text-base";
+            } else {
+                iconEl.className = "fa-solid fa-triangle-exclamation text-amber-500 text-base";
+            }
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        let tokenClient;
+        function gisLoaded() {
+            tokenClient = google.accounts.oauth2.initTokenClient({
+                client_id: 'YOUR_CLIENT_ID.apps.googleusercontent.com',
+                scope: 'https://www.googleapis.com/auth/drive.appdata',
+                callback: (resp) => {
+                    if (resp.error) {
+                        console.error(resp);
+                        return;
+                    }
+                    showToast('Google Drive connected!', 'success');
+                }
+            });
         }
 
         function handleGoogleDriveAuth() {
-            showToast('Google Drive integration requires API Client ID configuration.', 'info');
+            if (tokenClient) {
+                tokenClient.requestAccessToken({ prompt: '' });
+            } else {
+                alert('Google Drive client is initializing or client ID is missing.');
+            }
         }
 
-        // Initialize App
+        // Initial render on load
         renderParties();
     </script>
 </body>
